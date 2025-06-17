@@ -1,268 +1,103 @@
-html_content = '''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMI・基礎代謝量計算機</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        input:focus, select:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .results {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            border-left: 4px solid #4CAF50;
-        }
-        .result-item {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: white;
-            border-radius: 5px;
-        }
-        .result-title {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .result-value {
-            font-size: 18px;
-            color: #4CAF50;
-        }
-        .bmi-category {
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 3px;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .underweight { background-color: #e3f2fd; color: #1976d2; }
-        .normal { background-color: #e8f5e8; color: #388e3c; }
-        .overweight { background-color: #fff3e0; color: #f57c00; }
-        .obese { background-color: #ffebee; color: #d32f2f; }
-        .hidden { display: none; }
-    </style>
+  <meta charset="UTF-8">
+  <title>BMI・基礎代謝計算ツール</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    label { display: block; margin-top: 1em; }
+    input, select { margin-top: 0.5em; }
+    .result { margin-top: 2em; padding: 1em; border: 1px solid #ccc; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>BMI・基礎代謝量計算機</h1>
-        
-        <form id="calculatorForm">
-            <div class="form-group">
-                <label for="height">身長 (cm):</label>
-                <input type="number" id="height" step="0.1" min="100" max="250" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="weight">体重 (kg):</label>
-                <input type="number" id="weight" step="0.1" min="30" max="200" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="age">年齢:</label>
-                <input type="number" id="age" min="10" max="120" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="gender">性別:</label>
-                <select id="gender" required>
-                    <option value="">選択してください</option>
-                    <option value="male">男性</option>
-                    <option value="female">女性</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="activity">活動レベル:</label>
-                <select id="activity" required>
-                    <option value="">選択してください</option>
-                    <option value="1.2">座りがちな生活（ほとんど運動しない）</option>
-                    <option value="1.375">軽い活動（週1-3回の軽い運動）</option>
-                    <option value="1.55">中程度の活動（週3-5回の中程度の運動）</option>
-                    <option value="1.725">活発な活動（週6-7回の激しい運動）</option>
-                    <option value="1.9">非常に活発（1日2回の運動、肉体労働）</option>
-                </select>
-            </div>
-            
-            <button type="submit">計算する</button>
-        </form>
-        
-        <div id="results" class="results hidden">
-            <div class="result-item">
-                <div class="result-title">現在のBMI</div>
-                <div class="result-value" id="bmiValue"></div>
-                <div id="bmiCategory"></div>
-            </div>
-            
-            <div class="result-item">
-                <div class="result-title">適正体重の範囲</div>
-                <div class="result-value" id="idealWeight"></div>
-            </div>
-            
-            <div class="result-item">
-                <div class="result-title">ハリス・ベネディクト方程式による基礎代謝量</div>
-                <div class="result-value" id="harrisBMR"></div>
-            </div>
-            
-            <div class="result-item">
-                <div class="result-title">Mifflin-St Jeor方程式による基礎代謝量</div>
-                <div class="result-value" id="mifflinBMR"></div>
-            </div>
-            
-            <div class="result-item">
-                <div class="result-title">1日の消費カロリー（ハリス・ベネディクト）</div>
-                <div class="result-value" id="harrisTDEE"></div>
-            </div>
-            
-            <div class="result-item">
-                <div class="result-title">1日の消費カロリー（Mifflin-St Jeor）</div>
-                <div class="result-value" id="mifflinTDEE"></div>
-            </div>
-        </div>
-    </div>
+  <h1>BMI・基礎代謝計算ツール</h1>
+  <form id="calcForm">
+    <label>
+      身長 (cm):
+      <input type="number" id="height" required min="100" max="250" step="0.1">
+    </label>
+    <label>
+      体重 (kg):
+      <input type="number" id="weight" required min="20" max="200" step="0.1">
+    </label>
+    <label>
+      年齢:
+      <input type="number" id="age" required min="10" max="120">
+    </label>
+    <label>
+      性別:
+      <select id="gender" required>
+        <option value="male">男性</option>
+        <option value="female">女性</option>
+      </select>
+    </label>
+    <label>
+      活動レベル:
+      <select id="activity" required>
+        <option value="1.2">ほとんど運動しない（1.2）</option>
+        <option value="1.375">軽い運動（週1-3日）（1.375）</option>
+        <option value="1.55">中程度の運動（週3-5日）（1.55）</option>
+        <option value="1.725">激しい運動（週6-7日）（1.725）</option>
+        <option value="1.9">非常に激しい運動（1.9）</option>
+      </select>
+    </label>
+    <br>
+    <button type="submit">計算する</button>
+  </form>
 
-    <script>
-        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // 入力値を取得
-            const height = parseFloat(document.getElementById('height').value);
-            const weight = parseFloat(document.getElementById('weight').value);
-            const age = parseInt(document.getElementById('age').value);
-            const gender = document.getElementById('gender').value;
-            const activityLevel = parseFloat(document.getElementById('activity').value);
-            
-            // BMI計算
-            const heightInMeters = height / 100;
-            const bmi = weight / (heightInMeters * heightInMeters);
-            
-            // BMIカテゴリー判定
-            let bmiCategory, categoryClass;
-            if (bmi < 18.5) {
-                bmiCategory = '低体重';
-                categoryClass = 'underweight';
-            } else if (bmi < 25) {
-                bmiCategory = '普通体重';
-                categoryClass = 'normal';
-            } else if (bmi < 30) {
-                bmiCategory = '過体重';
-                categoryClass = 'overweight';
-            } else {
-                bmiCategory = '肥満';
-                categoryClass = 'obese';
-            }
-            
-            // 適正体重の範囲計算（BMI 18.5-24.9）
-            const minIdealWeight = 18.5 * heightInMeters * heightInMeters;
-            const maxIdealWeight = 24.9 * heightInMeters * heightInMeters;
-            
-            // ハリス・ベネディクト方程式による基礎代謝量計算
-            let harrisBMR;
-            if (gender === 'male') {
-                harrisBMR = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-            } else {
-                harrisBMR = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-            }
-            
-            // Mifflin-St Jeor方程式による基礎代謝量計算
-            let mifflinBMR;
-            if (gender === 'male') {
-                mifflinBMR = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-            } else {
-                mifflinBMR = (10 * weight) + (6.25 * height) - (5 * age) - 161;
-            }
-            
-            // 1日の総消費カロリー計算（TDEE）
-            const harrisTDEE = harrisBMR * activityLevel;
-            const mifflinTDEE = mifflinBMR * activityLevel;
-            
-            // 結果を表示
-            document.getElementById('bmiValue').textContent = bmi.toFixed(1);
-            document.getElementById('bmiCategory').innerHTML = 
-                `<span class="bmi-category ${categoryClass}">${bmiCategory}</span>`;
-            document.getElementById('idealWeight').textContent = 
-                `${minIdealWeight.toFixed(1)}kg - ${maxIdealWeight.toFixed(1)}kg`;
-            document.getElementById('harrisBMR').textContent = 
-                `${Math.round(harrisBMR)} kcal/日`;
-            document.getElementById('mifflinBMR').textContent = 
-                `${Math.round(mifflinBMR)} kcal/日`;
-            document.getElementById('harrisTDEE').textContent = 
-                `${Math.round(harrisTDEE)} kcal/日`;
-            document.getElementById('mifflinTDEE').textContent = 
-                `${Math.round(mifflinTDEE)} kcal/日`;
-            
-            // 結果セクションを表示
-            document.getElementById('results').classList.remove('hidden');
-            
-            // 結果セクションまでスクロール
-            document.getElementById('results').scrollIntoView({ 
-                behavior: 'smooth' 
-            });
-        });
-    </script>
+  <div class="result" id="result"></div>
+
+  <script>
+    document.getElementById('calcForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // 入力値取得
+      const height = parseFloat(document.getElementById('height').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const age = parseInt(document.getElementById('age').value, 10);
+      const gender = document.getElementById('gender').value;
+      const activity = parseFloat(document.getElementById('activity').value);
+
+      // BMI計算
+      const heightM = height / 100;
+      const bmi = weight / (heightM * heightM);
+
+      // 適正体重範囲
+      const minWeight = 18.5 * heightM * heightM;
+      const maxWeight = 25 * heightM * heightM;
+
+      // ハリスベネディクト方程式
+      let bmrHarris;
+      if (gender === 'male') {
+        bmrHarris = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
+      } else {
+        bmrHarris = 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age);
+      }
+
+      // Mifflin-St Jeor方程式
+      let bmrMifflin;
+      if (gender === 'male') {
+        bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+      } else {
+        bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+      }
+
+      // 1日の推定消費カロリー
+      const tdeeHarris = bmrHarris * activity;
+      const tdeeMifflin = bmrMifflin * activity;
+
+      // 結果表示
+      document.getElementById('result').innerHTML = `
+        <strong>【計算結果】</strong><br>
+        <b>BMI：</b> ${bmi.toFixed(2)}<br>
+        <b>適正体重範囲：</b> ${minWeight.toFixed(1)} kg ～ ${maxWeight.toFixed(1)} kg<br>
+        <b>ハリスベネディクト方程式による基礎代謝量：</b> ${bmrHarris.toFixed(0)} kcal/日<br>
+        <b>Mifflin-St Jeor方程式による基礎代謝量：</b> ${bmrMifflin.toFixed(0)} kcal/日<br>
+        <b>ハリスベネディクト式の推定消費カロリー：</b> ${tdeeHarris.toFixed(0)} kcal/日<br>
+        <b>Mifflin-St Jeor式の推定消費カロリー：</b> ${tdeeMifflin.toFixed(0)} kcal/日
+      `;
+    });
+  </script>
 </body>
-</html>'''
-
-# HTMLファイルを作成
-with open('bmi_calculator.html', 'w', encoding='utf-8') as f:
-    f.write(html_content)
-
-print("BMI・基礎代謝量計算機のWebページ（bmi_calculator.html）を作成しました。")
-print("\n機能:")
-print("- BMI計算と分類表示")
-print("- 適正体重範囲の計算")
-print("- ハリス・ベネディクト方程式による基礎代謝量計算")
-print("- Mifflin-St Jeor方程式による基礎代謝量計算")
-print("- 活動レベルを考慮した1日の総消費カロリー計算")
-print("- レスポンシブデザイン対応")
+</html>

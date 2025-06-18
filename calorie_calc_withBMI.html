@@ -44,7 +44,7 @@
     .input-group {
       display: flex;
       align-items: center;
-      margin-bottom: 1.2em; /* ←ここを広げました */
+      margin-bottom: 1.2em;
     }
     .input-group label {
       display: inline-block;
@@ -129,14 +129,61 @@
     <br>
     <button type="submit">計算する</button>
   </form>
-  <div class="result" id="result"></div>
+  
+  <div class="result" id="result">
+    <strong>【計算結果】</strong><br>
+    <b>BMI：</b> <span id="bmi"></span><br>
+    <b>適正体重範囲：</b> <span id="minWeight"></span> kg ～ <span id="maxWeight"></span> kg<br>
+    <table>
+      <thead>
+        <tr>
+          <th>方式</th>
+          <th>基礎代謝量 (kcal/日)</th>
+          <th>推定消費カロリー (kcal/日)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ハリスベネディクト式</td>
+          <td><span id="bmrHarris"></span></td>
+          <td><span id="tdeeHarris"></span></td>
+        </tr>
+        <tr>
+          <td>Mifflin-St Jeor式</td>
+          <td><span id="bmrMifflin"></span></td>
+          <td><span id="tdeeMifflin"></span></td>
+        </tr>
+        <tr>
+          <td>平均</td>
+          <td><span id="bmrMean"></span></td>
+          <td><span id="tdeeMean"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <script>
+    // 結果をクリアする関数
+    function clearResults() {
+      document.getElementById('bmi').textContent = '';
+      document.getElementById('minWeight').textContent = '';
+      document.getElementById('maxWeight').textContent = '';
+      document.getElementById('bmrHarris').textContent = '';
+      document.getElementById('tdeeHarris').textContent = '';
+      document.getElementById('bmrMifflin').textContent = '';
+      document.getElementById('tdeeMifflin').textContent = '';
+      document.getElementById('bmrMean').textContent = '';
+      document.getElementById('tdeeMean').textContent = '';
+    }
+
+    // 初期化ボタンのイベントリスナー
     document.getElementById('resetBtn').addEventListener('click', function() {
       document.getElementById('calcForm').reset();
       document.getElementById('male').checked = true;
-      document.getElementById('result').innerHTML = '';
+      clearResults();
       document.getElementById('errorMessage').style.display = 'none';
       document.getElementById('errorMessage').textContent = '';
+      this.focus(); // 初期化ボタンにフォーカス
     });
 
     function showError(message) {
@@ -144,12 +191,14 @@
       errorElement.textContent = message;
       errorElement.style.display = 'block';
     }
+    
     function hideError() {
       const errorElement = document.getElementById('errorMessage');
       errorElement.style.display = 'none';
       errorElement.textContent = '';
     }
 
+    // 計算フォームのイベントリスナー
     document.getElementById('calcForm').addEventListener('submit', function(e) {
       e.preventDefault();
       hideError();
@@ -162,14 +211,17 @@
 
       if (isNaN(height) || height < 1) {
         showError('身長を正しく入力してください（1以上の数値）');
+        clearResults();
         return;
       }
       if (isNaN(weight) || weight < 1) {
         showError('体重を正しく入力してください（1以上の数値）');
+        clearResults();
         return;
       }
       if (isNaN(age) || age < 1) {
         showError('年齢を正しく入力してください（1以上の整数）');
+        clearResults();
         return;
       }
 
@@ -197,37 +249,19 @@
       const bmrMean = (bmrHarris + bmrMifflin) / 2;
       const tdeeMean = (tdeeHarris + tdeeMifflin) / 2;
 
-      document.getElementById('result').innerHTML = `
-        <strong>【計算結果】</strong><br>
-        <b>BMI：</b> ${bmi.toFixed(2)}<br>
-        <b>適正体重範囲：</b> ${minWeight.toFixed(1)} kg ～ ${maxWeight.toFixed(1)} kg<br>
-        <table>
-          <thead>
-            <tr>
-              <th>方式</th>
-              <th>基礎代謝量 (kcal/日)</th>
-              <th>推定消費カロリー (kcal/日)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>ハリスベネディクト式</td>
-              <td>${bmrHarris.toFixed(0)}</td>
-              <td>${tdeeHarris.toFixed(0)}</td>
-            </tr>
-            <tr>
-              <td>Mifflin-St Jeor式</td>
-              <td>${bmrMifflin.toFixed(0)}</td>
-              <td>${tdeeMifflin.toFixed(0)}</td>
-            </tr>
-            <tr>
-              <td>平均</td>
-              <td>${bmrMean.toFixed(0)}</td>
-              <td>${tdeeMean.toFixed(0)}</td>
-            </tr>
-          </tbody>
-        </table>
-      `;
+      // 計算結果をテーブルの各セルに設定
+      document.getElementById('bmi').textContent = bmi.toFixed(2);
+      document.getElementById('minWeight').textContent = minWeight.toFixed(1);
+      document.getElementById('maxWeight').textContent = maxWeight.toFixed(1);
+      document.getElementById('bmrHarris').textContent = bmrHarris.toFixed(0);
+      document.getElementById('tdeeHarris').textContent = tdeeHarris.toFixed(0);
+      document.getElementById('bmrMifflin').textContent = bmrMifflin.toFixed(0);
+      document.getElementById('tdeeMifflin').textContent = tdeeMifflin.toFixed(0);
+      document.getElementById('bmrMean').textContent = bmrMean.toFixed(0);
+      document.getElementById('tdeeMean').textContent = tdeeMean.toFixed(0);
+
+      // 計算後に初期化ボタンへフォーカス
+      document.getElementById('resetBtn').focus();
     });
   </script>
 </body>

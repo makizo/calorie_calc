@@ -7,69 +7,99 @@
     body { 
       font-family: sans-serif; 
       margin: 2em; 
-      background-color: #f0f7f0; /* 薄い緑色の背景 */
+      background-color: #f0f7f0;
       color: #333;
     }
     h1 {
-      color: #006400; /* 濃い緑色のタイトル */
+      color: #006400;
     }
-    label { 
-      display: block; 
-      margin-top: 0.5em; 
-      color: #004b00; /* 少し濃い緑色のラベル */
+    .reset-button {
+      margin-bottom: 1.5em;
     }
-    input[type="text"], select { 
-      margin-top: 0.5em; 
-      padding: 0.5em;
-      border: 1px solid #a9d18e; /* 薄い緑色のボーダー */
-      border-radius: 5px;
-    }
-    input[type="text"] { 
-      width: 80px; 
-      ime-mode: disabled;
-    }
-    .input-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5em;
-    }
-    .input-group label {
-      display: inline-block;
-      margin-right: 1em;
-      width: 60px; /* ラベルの幅を調整 */
-    }
-    .gender-group { margin-left: 1em; }
-    .gender-group label { display: inline; margin-right: 0.5em; width: auto; }
-    .result { 
-      margin-top: 2em; 
-      padding: 1em; 
-      border: 1px solid #a9d18e; /* 薄い緑色のボーダー */
-      background-color: #e2f0d9; /* より薄い緑色の背景 */
-      border-radius: 5px;
-    }
-    table { width: 50%; border-collapse: collapse; margin-top: 1em; }
-    th, td { border: 1px solid #a9d18e; padding: 0.5em; text-align: center; }
-    th { background-color: #c6e4b3; /* 少し濃い緑色のヘッダー */ }
-    button {
-      background-color: #4CAF50; /* 緑色のボタン */
+    .reset-button button {
+      background-color: #ff6b6b;
       color: white;
       padding: 0.5em 1em;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #367c39; /* ホバー時の濃い緑色 */
+    .reset-button button:hover {
+      background-color: #e55555;
+    }
+    label { 
+      display: block; 
+      margin-top: 0.5em; 
+      color: #004b00;
+    }
+    input[type="number"], select { 
+      margin-top: 0.5em; 
+      padding: 0.5em;
+      border: 1px solid #a9d18e;
+      border-radius: 5px;
+    }
+    input[type="number"] { 
+      width: 80px; 
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.2em; /* ←ここを広げました */
+    }
+    .input-group label {
+      display: inline-block;
+      margin-right: 2em;
+      width: 60px;
+      white-space: nowrap;
+    }
+    .gender-group { margin-left: 2em; }
+    .gender-group label {
+      display: inline;
+      margin-right: 0.5em;
+      width: auto;
+      white-space: nowrap;
+    }
+    .result { 
+      margin-top: 2em; 
+      padding: 1em; 
+      border: 1px solid #a9d18e;
+      background-color: #e2f0d9;
+      border-radius: 5px;
+    }
+    .error-message {
+      color: #d32f2f;
+      font-size: 0.9em;
+      margin-top: 0.5em;
+      display: none;
+    }
+    table { width: 50%; border-collapse: collapse; margin-top: 1em; }
+    th, td { border: 1px solid #a9d18e; padding: 0.5em; text-align: center; }
+    th { background-color: #c6e4b3; }
+    th:first-child, td:first-child {
+      width: 12em;
+    }
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.5em 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button[type="submit"]:hover {
+      background-color: #367c39;
     }
   </style>
 </head>
 <body>
   <h1>BMI・基礎代謝計算ツール</h1>
+  <div class="reset-button">
+    <button type="button" id="resetBtn">初期化</button>
+  </div>
   <form id="calcForm" autocomplete="off">
-
     <div class="input-group">
       <label for="age">年齢:</label>
-      <input type="text" id="age" required>
+      <input type="number" id="age" required min="1" inputmode="numeric">
       <span class="gender-group">
         <input type="radio" id="male" name="gender" value="male" checked>
         <label for="male">男性</label>
@@ -77,17 +107,14 @@
         <label for="female">女性</label>
       </span>
     </div>
-
     <div class="input-group">
       <label for="height">身長 (cm):</label>
-      <input type="text" id="height" required>
+      <input type="number" id="height" required min="1" step="0.1" inputmode="decimal">
     </div>
-
     <div class="input-group">
       <label for="weight">体重 (kg):</label>
-      <input type="text" id="weight" required>
+      <input type="number" id="weight" required min="1" step="0.1" inputmode="decimal">
     </div>
-
     <div class="input-group">
       <label for="activity">活動レベル:</label>
       <select id="activity" required>
@@ -98,47 +125,59 @@
         <option value="1.9">非常に激しい運動（1.9）</option>
       </select>
     </div>
-
+    <div class="error-message" id="errorMessage"></div>
     <br>
     <button type="submit">計算する</button>
   </form>
-
   <div class="result" id="result"></div>
-
   <script>
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      document.getElementById('calcForm').reset();
+      document.getElementById('male').checked = true;
+      document.getElementById('result').innerHTML = '';
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('errorMessage').textContent = '';
+    });
+
+    function showError(message) {
+      const errorElement = document.getElementById('errorMessage');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+    }
+    function hideError() {
+      const errorElement = document.getElementById('errorMessage');
+      errorElement.style.display = 'none';
+      errorElement.textContent = '';
+    }
+
     document.getElementById('calcForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      hideError();
 
-      // 入力値取得
       const height = parseFloat(document.getElementById('height').value);
       const weight = parseFloat(document.getElementById('weight').value);
       const age = parseInt(document.getElementById('age').value, 10);
       const gender = document.querySelector('input[name="gender"]:checked').value;
       const activity = parseFloat(document.getElementById('activity').value);
 
-      // 入力値のバリデーション
-      if (isNaN(height) || height <= 0) {
-        alert('身長を正しく入力してください');
+      if (isNaN(height) || height < 1) {
+        showError('身長を正しく入力してください（1以上の数値）');
         return;
       }
-      if (isNaN(weight) || weight <= 0) {
-        alert('体重を正しく入力してください');
+      if (isNaN(weight) || weight < 1) {
+        showError('体重を正しく入力してください（1以上の数値）');
         return;
       }
-      if (isNaN(age) || age <= 0) {
-        alert('年齢を正しく入力してください');
+      if (isNaN(age) || age < 1) {
+        showError('年齢を正しく入力してください（1以上の整数）');
         return;
       }
 
-      // BMI計算
       const heightM = height / 100;
       const bmi = weight / (heightM * heightM);
-
-      // 適正体重範囲
       const minWeight = 18.5 * heightM * heightM;
       const maxWeight = 25 * heightM * heightM;
 
-      // ハリスベネディクト方程式
       let bmrHarris;
       if (gender === 'male') {
         bmrHarris = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
@@ -146,7 +185,6 @@
         bmrHarris = 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age);
       }
 
-      // Mifflin-St Jeor方程式
       let bmrMifflin;
       if (gender === 'male') {
         bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) + 5;
@@ -154,16 +192,15 @@
         bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) - 161;
       }
 
-      // 1日の推定消費カロリー
       const tdeeHarris = bmrHarris * activity;
       const tdeeMifflin = bmrMifflin * activity;
+      const bmrMean = (bmrHarris + bmrMifflin) / 2;
+      const tdeeMean = (tdeeHarris + tdeeMifflin) / 2;
 
-      // 結果表示
       document.getElementById('result').innerHTML = `
         <strong>【計算結果】</strong><br>
         <b>BMI：</b> ${bmi.toFixed(2)}<br>
         <b>適正体重範囲：</b> ${minWeight.toFixed(1)} kg ～ ${maxWeight.toFixed(1)} kg<br>
-
         <table>
           <thead>
             <tr>
@@ -182,6 +219,11 @@
               <td>Mifflin-St Jeor式</td>
               <td>${bmrMifflin.toFixed(0)}</td>
               <td>${tdeeMifflin.toFixed(0)}</td>
+            </tr>
+            <tr>
+              <td>平均</td>
+              <td>${bmrMean.toFixed(0)}</td>
+              <td>${tdeeMean.toFixed(0)}</td>
             </tr>
           </tbody>
         </table>

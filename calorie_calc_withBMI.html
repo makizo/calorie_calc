@@ -132,7 +132,8 @@
   
   <div class="result" id="result">
     <strong>【計算結果】</strong><br>
-    <b>BMI：</b> <span id="bmi"></span><br>
+    <b>現在のBMI：</b> <span id="curbmi"></span><br>
+    <b>ベストな体重：</b><span id="bestbw"></span> kg<br>
     <b>適正体重範囲：</b> <span id="minWeight"></span> kg ～ <span id="maxWeight"></span> kg<br>
     <table>
       <thead>
@@ -154,7 +155,7 @@
           <td><span id="tdeeMifflin"></span></td>
         </tr>
         <tr>
-          <td>平均</td>
+          <td>上記2つの平均</td>
           <td><span id="bmrMean"></span></td>
           <td><span id="tdeeMean"></span></td>
         </tr>
@@ -165,7 +166,8 @@
   <script>
     // 結果をクリアする関数
     function clearResults() {
-      document.getElementById('bmi').textContent = '';
+      document.getElementById('curbmi').textContent = '';
+      document.getElementById('bestbw').textContent = '';
       document.getElementById('minWeight').textContent = '';
       document.getElementById('maxWeight').textContent = '';
       document.getElementById('bmrHarris').textContent = '';
@@ -226,7 +228,8 @@
       }
 
       const heightM = height / 100;
-      const bmi = weight / (heightM * heightM);
+      const curBMI = weight / (heightM * heightM);
+      const bestbw = 22 * heightM * heightM;
       const minWeight = 18.5 * heightM * heightM;
       const maxWeight = 25 * heightM * heightM;
 
@@ -250,7 +253,8 @@
       const tdeeMean = (tdeeHarris + tdeeMifflin) / 2;
 
       // 計算結果をテーブルの各セルに設定
-      document.getElementById('bmi').textContent = bmi.toFixed(2);
+      document.getElementById('curbmi').textContent = curBMI.toFixed(2);
+      document.getElementById('bestbw').textContent = bestbw.toFixed(2);
       document.getElementById('minWeight').textContent = minWeight.toFixed(1);
       document.getElementById('maxWeight').textContent = maxWeight.toFixed(1);
       document.getElementById('bmrHarris').textContent = bmrHarris.toFixed(0);

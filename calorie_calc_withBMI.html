@@ -133,8 +133,10 @@
   <div class="result" id="result">
     <strong>【計算結果】</strong><br>
     <b>現在のBMI：</b> <span id="curbmi"></span><br>
-    <b>ベストな体重：</b><span id="bestbw"></span> kg<br>
-    <b>適正体重範囲：</b> <span id="minWeight"></span> kg ～ <span id="maxWeight"></span> kg<br>
+    <b>ベスト体重：</b><span id="bestbw"></span> kg<br>
+    <b>必要な増減量：</b><span id="bestbwDiff"</span> kg<br>
+    <b>適正体重範囲：</b> <span id="minWeight"></span> ( <span id="minWeightDiff"></span> )  kg ～ <span id="maxWeight"></span> ( <span id="maxWeightDiff"></span> ) kg<br>
+    
     <table>
       <thead>
         <tr>
@@ -230,8 +232,11 @@
       const heightM = height / 100;
       const curBMI = weight / (heightM * heightM);
       const bestbw = 22 * heightM * heightM;
+      const bestbwDiff = bestbw - weight;
       const minWeight = 18.5 * heightM * heightM;
+      const minWeightDiff = minWeight - weight;
       const maxWeight = 25 * heightM * heightM;
+      const maxWeightDiff = maxWeight - weight;
 
       let bmrHarris;
       if (gender === 'male') {
@@ -254,9 +259,11 @@
 
       // 計算結果をテーブルの各セルに設定
       document.getElementById('curbmi').textContent = curBMI.toFixed(2);
-      document.getElementById('bestbw').textContent = bestbw.toFixed(2);
+      document.getElementById('bestbw').textContent = bestbw.toFixed(1);
       document.getElementById('minWeight').textContent = minWeight.toFixed(1);
+      document.getElementById('minWeightDiff').textContent = minWeightDiff.toFixed(1);
       document.getElementById('maxWeight').textContent = maxWeight.toFixed(1);
+      document.getElementById('maxWeightDiff').textContent = maxWeightDiff.toFixed(1);
       document.getElementById('bmrHarris').textContent = bmrHarris.toFixed(0);
       document.getElementById('tdeeHarris').textContent = tdeeHarris.toFixed(0);
       document.getElementById('bmrMifflin').textContent = bmrMifflin.toFixed(0);

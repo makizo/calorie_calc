@@ -5,89 +5,105 @@
   <title>BMI・基礎代謝計算ツール</title>
   <style>
     body { 
-      font-family: sans-serif; 
-      margin: 2em; 
-      background-color: #f0f7f0;
-      color: #333;
+    font-family: sans-serif; 
+    margin: 2em; 
+    background-color: #f0f7f0;
+    color: #333;
     }
     h1 {
-      color: #006400;
+    color: #006400;
     }
     .reset-button {
-      margin-bottom: 1.5em;
+    margin-bottom: 1.5em;
     }
     .reset-button button {
-      background-color: #ff6b6b;
-      color: white;
-      padding: 0.5em 1em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    background-color: #ff6b6b;
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
     }
     .reset-button button:hover {
-      background-color: #e55555;
+    background-color: #e5555;
     }
     label { 
-      display: block; 
-      margin-top: 0.5em; 
-      color: #004b00;
+    display: block; 
+    margin-top: 0.5em; 
+    color: #004b00;
     }
     input[type="number"], select { 
-      margin-top: 0.5em; 
-      padding: 0.5em;
-      border: 1px solid #a9d18e;
-      border-radius: 5px;
+    margin-top: 0.5em; 
+    padding: 0.5em;
+    border: 1px solid #a9d18e;
+    border-radius: 5px;
     }
     input[type="number"] { 
-      width: 80px; 
+    width: 80px; 
     }
     .input-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.2em;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2em;
     }
     .input-group label {
-      display: inline-block;
-      margin-right: 2em;
-      width: 60px;
-      white-space: nowrap;
+    display: inline-block;
+    margin-right: 2em;
+    width: 60px;
+    white-space: nowrap;
     }
     .gender-group { margin-left: 2em; }
     .gender-group label {
-      display: inline;
-      margin-right: 0.5em;
-      width: auto;
-      white-space: nowrap;
+    display: inline;
+    margin-right: 0.5em;
+    width: auto;
+    white-space: nowrap;
     }
     .result { 
-      margin-top: 2em; 
-      padding: 1em; 
-      border: 1px solid #a9d18e;
-      background-color: #e2f0d9;
-      border-radius: 5px;
+    margin-top: 2em; 
+    padding: 1em; 
+    border: 1px solid #a9d18e;
+    background-color: #e2f0d9;
+    border-radius: 5px;
     }
     .error-message {
-      color: #d32f2f;
-      font-size: 0.9em;
-      margin-top: 0.5em;
-      display: none;
+    color: #d32f2f;
+    font-size: 0.9em;
+    margin-top: 0.5em;
+    display: none;
     }
-    table { width: 50%; border-collapse: collapse; margin-top: 1em; }
-    th, td { border: 1px solid #a9d18e; padding: 0.5em; text-align: center; }
+    table { 
+    width: 70%; 
+    border-collapse: collapse; 
+    margin-top: 1em; 
+    table-layout: fixed;
+    }
+    th, td { 
+    border: 1px solid #a9d18e; 
+    padding: 0.5em; 
+    text-align: center; 
+    white-space: nowrap;
+    }
     th { background-color: #c6e4b3; }
     th:first-child, td:first-child {
-      width: 12em;
+    width: 20%;
+    }
+    th:nth-child(2), td:nth-child(2) {
+    width: 40%;
+    }
+    th:nth-child(3), td:nth-child(3) {
+    width: 40%;
     }
     button[type="submit"] {
-      background-color: #4CAF50;
-      color: white;
-      padding: 0.5em 1em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
     }
     button[type="submit"]:hover {
-      background-color: #367c39;
+    background-color: #367c39;
     }
   </style>
 </head>
@@ -98,181 +114,185 @@
   </div>
   <form id="calcForm" autocomplete="off">
     <div class="input-group">
-      <label for="age">年齢:</label>
-      <input type="number" id="age" required min="1" inputmode="numeric">
-      <span class="gender-group">
-        <input type="radio" id="male" name="gender" value="male" checked>
-        <label for="male">男性</label>
-        <input type="radio" id="female" name="gender" value="female">
-        <label for="female">女性</label>
-      </span>
+    <label for="age">年齢:</label>
+    <input type="number" id="age" required min="1" inputmode="numeric">
+    <span class="gender-group">
+    <input type="radio" id="male" name="gender" value="male" checked>
+    <label for="male">男性</label>
+    <input type="radio" id="female" name="gender" value="female">
+    <label for="female">女性</label>
+    </span>
     </div>
     <div class="input-group">
-      <label for="height">身長 (cm):</label>
-      <input type="number" id="height" required min="1" step="0.1" inputmode="decimal">
+    <label for="height">身長 (cm):</label>
+    <input type="number" id="height" required min="1" step="0.1" inputmode="decimal">
     </div>
     <div class="input-group">
-      <label for="weight">体重 (kg):</label>
-      <input type="number" id="weight" required min="1" step="0.1" inputmode="decimal">
+    <label for="weight">体重 (kg):</label>
+    <input type="number" id="weight" required min="1" step="0.1" inputmode="decimal">
     </div>
     <div class="input-group">
-      <label for="activity">活動レベル:</label>
-      <select id="activity" required>
-        <option value="1.2">ほとんど運動しない（1.2）</option>
-        <option value="1.375">軽い運動（週1-3日）（1.375）</option>
-        <option value="1.55">中程度の運動（週3-5日）（1.55）</option>
-        <option value="1.725">激しい運動（週6-7日）（1.725）</option>
-        <option value="1.9">非常に激しい運動（1.9）</option>
-      </select>
+    <label for="activity">活動レベル:</label>
+    <select id="activity" required>
+    <option value="1.2">ほとんど運動しない（1.2）</option>
+    <option value="1.375">軽い運動（週1-3日）（1.375）</option>
+    <option value="1.55">中程度の運動（週3-5日）（1.55）</option>
+    <option value="1.725">激しい運動（週6-7日）（1.725）</option>
+    <option value="1.9">非常に激しい運動（1.9）</option>
+    </select>
     </div>
     <div class="error-message" id="errorMessage"></div>
     <br>
     <button type="submit">計算する</button>
   </form>
-  
+
   <div class="result" id="result">
     <strong>【計算結果】</strong><br>
     <b>現在のBMI：</b> <span id="curbmi"></span><br>
     <b>ベスト体重：</b><span id="bestbw"></span> kg<br>
-    <b>必要な増減量：</b><span id="bestbwDiff"</span> kg<br>
+    <b>必要増減量：</b><span id="bestbwDiff"></span> kg<br>
     <b>適正体重範囲：</b> <span id="minWeight"></span> ( <span id="minWeightDiff"></span> )  kg ～ <span id="maxWeight"></span> ( <span id="maxWeightDiff"></span> ) kg<br>
-    
+
     <table>
-      <thead>
-        <tr>
-          <th>方式</th>
-          <th>基礎代謝量 (kcal/日)</th>
-          <th>推定消費カロリー (kcal/日)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>ハリスベネディクト式</td>
-          <td><span id="bmrHarris"></span></td>
-          <td><span id="tdeeHarris"></span></td>
-        </tr>
-        <tr>
-          <td>Mifflin-St Jeor式</td>
-          <td><span id="bmrMifflin"></span></td>
-          <td><span id="tdeeMifflin"></span></td>
-        </tr>
-        <tr>
-          <td>上記2つの平均</td>
-          <td><span id="bmrMean"></span></td>
-          <td><span id="tdeeMean"></span></td>
-        </tr>
-      </tbody>
+    <thead>
+    <tr>
+    <th>方式</th>
+    <th>基礎代謝量 (kcal/日)</th>
+    <th>推定消費カロリー (kcal/日)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>ハリスベネディクト式</td>
+    <td><span id="bmrHarris"></span></td>
+    <td><span id="tdeeHarris"></span></td>
+    </tr>
+    <tr>
+    <td>Mifflin-St Jeor式</td>
+    <td><span id="bmrMifflin"></span></td>
+    <td><span id="tdeeMifflin"></span></td>
+    </tr>
+    <tr>
+    <td>上記2つの平均</td>
+    <td><span id="bmrMean"></span></td>
+    <td><span id="tdeeMean"></span></td>
+    </tr>
+    </tbody>
     </table>
   </div>
 
   <script>
     // 結果をクリアする関数
     function clearResults() {
-      document.getElementById('curbmi').textContent = '';
-      document.getElementById('bestbw').textContent = '';
-      document.getElementById('minWeight').textContent = '';
-      document.getElementById('maxWeight').textContent = '';
-      document.getElementById('bmrHarris').textContent = '';
-      document.getElementById('tdeeHarris').textContent = '';
-      document.getElementById('bmrMifflin').textContent = '';
-      document.getElementById('tdeeMifflin').textContent = '';
-      document.getElementById('bmrMean').textContent = '';
-      document.getElementById('tdeeMean').textContent = '';
+    document.getElementById('curbmi').textContent = '';
+    document.getElementById('bestbw').textContent = '';
+    document.getElementById('bestbwDiff').textContent = '';
+    document.getElementById('minWeight').textContent = '';
+    document.getElementById('minWeightDiff').textContent = '';
+    document.getElementById('maxWeight').textContent = '';
+    document.getElementById('maxWeightDiff').textContent = '';
+    document.getElementById('bmrHarris').textContent = '';
+    document.getElementById('tdeeHarris').textContent = '';
+    document.getElementById('bmrMifflin').textContent = '';
+    document.getElementById('tdeeMifflin').textContent = '';
+    document.getElementById('bmrMean').textContent = '';
+    document.getElementById('tdeeMean').textContent = '';
     }
 
     // 初期化ボタンのイベントリスナー
     document.getElementById('resetBtn').addEventListener('click', function() {
-      document.getElementById('calcForm').reset();
-      document.getElementById('male').checked = true;
-      clearResults();
-      document.getElementById('errorMessage').style.display = 'none';
-      document.getElementById('errorMessage').textContent = '';
-      this.focus(); // 初期化ボタンにフォーカス
+    document.getElementById('calcForm').reset();
+    document.getElementById('male').checked = true;
+    clearResults();
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('errorMessage').textContent = '';
+    this.focus(); // 初期化ボタンにフォーカス
     });
 
     function showError(message) {
-      const errorElement = document.getElementById('errorMessage');
-      errorElement.textContent = message;
-      errorElement.style.display = 'block';
+    const errorElement = document.getElementById('errorMessage');
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
     }
-    
+
     function hideError() {
-      const errorElement = document.getElementById('errorMessage');
-      errorElement.style.display = 'none';
-      errorElement.textContent = '';
+    const errorElement = document.getElementById('errorMessage');
+    errorElement.style.display = 'none';
+    errorElement.textContent = '';
     }
 
     // 計算フォームのイベントリスナー
     document.getElementById('calcForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      hideError();
+    e.preventDefault();
+    hideError();
 
-      const height = parseFloat(document.getElementById('height').value);
-      const weight = parseFloat(document.getElementById('weight').value);
-      const age = parseInt(document.getElementById('age').value, 10);
-      const gender = document.querySelector('input[name="gender"]:checked').value;
-      const activity = parseFloat(document.getElementById('activity').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    const age = parseInt(document.getElementById('age').value, 10);
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const activity = parseFloat(document.getElementById('activity').value);
 
-      if (isNaN(height) || height < 1) {
-        showError('身長を正しく入力してください（1以上の数値）');
-        clearResults();
-        return;
-      }
-      if (isNaN(weight) || weight < 1) {
-        showError('体重を正しく入力してください（1以上の数値）');
-        clearResults();
-        return;
-      }
-      if (isNaN(age) || age < 1) {
-        showError('年齢を正しく入力してください（1以上の整数）');
-        clearResults();
-        return;
-      }
+    if (isNaN(height) || height < 1) {
+    showError('身長を正しく入力してください（1以上の数値）');
+    clearResults();
+    return;
+    }
+    if (isNaN(weight) || weight < 1) {
+    showError('体重を正しく入力してください（1以上の数値）');
+    clearResults();
+    return;
+    }
+    if (isNaN(age) || age < 1) {
+    showError('年齢を正しく入力してください（1以上の整数）');
+    clearResults();
+    return;
+    }
 
-      const heightM = height / 100;
-      const curBMI = weight / (heightM * heightM);
-      const bestbw = 22 * heightM * heightM;
-      const bestbwDiff = bestbw - weight;
-      const minWeight = 18.5 * heightM * heightM;
-      const minWeightDiff = minWeight - weight;
-      const maxWeight = 25 * heightM * heightM;
-      const maxWeightDiff = maxWeight - weight;
+    const heightM = height / 100;
+    const curBMI = weight / (heightM * heightM);
+    const bestbw = 22 * heightM * heightM;
+    const bestbwDiff = bestbw - weight;
+    const minWeight = 18.5 * heightM * heightM;
+    const minWeightDiff = minWeight - weight;
+    const maxWeight = 25 * heightM * heightM;
+    const maxWeightDiff = maxWeight - weight;
 
-      let bmrHarris;
-      if (gender === 'male') {
-        bmrHarris = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
-      } else {
-        bmrHarris = 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age);
-      }
+    let bmrHarris;
+    if (gender === 'male') {
+    bmrHarris = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
+    } else {
+    bmrHarris = 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age);
+    }
 
-      let bmrMifflin;
-      if (gender === 'male') {
-        bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-      } else {
-        bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) - 161;
-      }
+    let bmrMifflin;
+    if (gender === 'male') {
+    bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    } else {
+    bmrMifflin = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    }
 
-      const tdeeHarris = bmrHarris * activity;
-      const tdeeMifflin = bmrMifflin * activity;
-      const bmrMean = (bmrHarris + bmrMifflin) / 2;
-      const tdeeMean = (tdeeHarris + tdeeMifflin) / 2;
+    const tdeeHarris = bmrHarris * activity;
+    const tdeeMifflin = bmrMifflin * activity;
+    const bmrMean = (bmrHarris + bmrMifflin) / 2;
+    const tdeeMean = (tdeeHarris + tdeeMifflin) / 2;
 
-      // 計算結果をテーブルの各セルに設定
-      document.getElementById('curbmi').textContent = curBMI.toFixed(2);
-      document.getElementById('bestbw').textContent = bestbw.toFixed(1);
-      document.getElementById('minWeight').textContent = minWeight.toFixed(1);
-      document.getElementById('minWeightDiff').textContent = minWeightDiff.toFixed(1);
-      document.getElementById('maxWeight').textContent = maxWeight.toFixed(1);
-      document.getElementById('maxWeightDiff').textContent = maxWeightDiff.toFixed(1);
-      document.getElementById('bmrHarris').textContent = bmrHarris.toFixed(0);
-      document.getElementById('tdeeHarris').textContent = tdeeHarris.toFixed(0);
-      document.getElementById('bmrMifflin').textContent = bmrMifflin.toFixed(0);
-      document.getElementById('tdeeMifflin').textContent = tdeeMifflin.toFixed(0);
-      document.getElementById('bmrMean').textContent = bmrMean.toFixed(0);
-      document.getElementById('tdeeMean').textContent = tdeeMean.toFixed(0);
+    // 計算結果をテーブルの各セルに設定
+    document.getElementById('curbmi').textContent = curBMI.toFixed(2);
+    document.getElementById('bestbw').textContent = bestbw.toFixed(1);
+    document.getElementById('bestbwDiff').textContent = bestbwDiff.toFixed(1);
+    document.getElementById('minWeight').textContent = minWeight.toFixed(1);
+    document.getElementById('minWeightDiff').textContent = minWeightDiff.toFixed(1);
+    document.getElementById('maxWeight').textContent = maxWeight.toFixed(1);
+    document.getElementById('maxWeightDiff').textContent = maxWeightDiff.toFixed(1);
+    document.getElementById('bmrHarris').textContent = bmrHarris.toFixed(0);
+    document.getElementById('tdeeHarris').textContent = tdeeHarris.toFixed(0);
+    document.getElementById('bmrMifflin').textContent = bmrMifflin.toFixed(0);
+    document.getElementById('tdeeMifflin').textContent = tdeeMifflin.toFixed(0);
+    document.getElementById('bmrMean').textContent = bmrMean.toFixed(0);
+    document.getElementById('tdeeMean').textContent = tdeeMean.toFixed(0);
 
-      // 計算後に初期化ボタンへフォーカス
-      document.getElementById('resetBtn').focus();
+    // 計算後に初期化ボタンへフォーカス
+    document.getElementById('resetBtn').focus();
     });
   </script>
 </body>
